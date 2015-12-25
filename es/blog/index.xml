@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="http://www.albertdelafuente.com">
+  <title>
+    albert:/dev/blog  </title>
+    <link href="http://www.albertdelafuente.com/es/blog/index.xml" rel="self" />
+  
+    <link href="http://www.albertdelafuente.com/blog/"/>
+  
+    
+  <updated>2015-12-25T01:16:58Z</updated>
+
+  <id>http://www.albertdelafuente.com/es/blog/index.xml</id>
+
+      <entry>
+    <title type="html">Redimencionando particiones LVM en LUKS</title>
+    <author><name></name></author>
+    <link href="http://www.albertdelafuente.com/es/blog/2015/resizing-lvm-on-luks.html"/>
+    <updated>2015-11-01T10:22:00Z</updated>
+    <published>2015-11-01T10:22:00Z</published>
+    <id>/es/blog/2015/resizing-lvm-on-luks.html</id>
+        <category   scheme="/tags/"
+                term="System"
+                label="System" />
+    
+    <content type="html">
+                  &lt;h2&gt;Intro&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;cryptsetup luksOpen /dev/sda2 cryptlvm&lt;br /&gt;&amp;nbsp;&lt;br /&gt;e2fsck -f /dev/mapper/storage-home&lt;br /&gt;&amp;nbsp;&lt;br /&gt;resize2fs -p /dev/mapper/storage-home 200g&lt;br /&gt;&amp;nbsp;&lt;br /&gt;e2fsck -f /dev/mapper/storage-home&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;lvdisplay&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;lvreduce -L -15G /dev/storage/home&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;lvdisplay&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;lvresize -l +100%FREE /dev/storate/root&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;resize2fs /dev/mapper/storage-root&lt;br /&gt;&amp;nbsp;&lt;br /&gt;cryptsetup luksClose /dev/sda2 cryptlvm&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;### NOT NEEDED&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;pvdisplay&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;pvresize --sephysicalvolumesize 218G /dev/mapper/cryptlvm&lt;br /&gt;&amp;nbsp;&lt;br /&gt;/dev/mapper/cryptlvm is active and is in use&lt;br /&gt;  &lt;span class=&#34;nb&#34;&gt;type&lt;/span&gt;:    LUKS1&lt;br /&gt;  cipher:  aes-xts-plain64&lt;br /&gt;  keysize: &lt;span class=&#34;m&#34;&gt;256&lt;/span&gt; bits&lt;br /&gt;  device:  /dev/sda2&lt;br /&gt;  offset:  &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt; sectors&lt;br /&gt;  size:    &lt;span class=&#34;m&#34;&gt;487981391&lt;/span&gt; sectors&lt;br /&gt;  mode:    &lt;span class=&#34;nb&#34;&gt;read&lt;/span&gt;/write&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;nv&#34;&gt;NEW_SECTORS&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; EXISTING_SECTORS * NEW_SIZE_IN_GB / EXISTING_SIZE_IN_GB&lt;br /&gt;&lt;span class=&#34;m&#34;&gt;487981391&lt;/span&gt; * 200.7 / 232.7   &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 420876085&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;487981391&lt;/span&gt; - 15*1024*1024*2 &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 456524111&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;cryptsetup -b &lt;span class=&#34;m&#34;&gt;420876085&lt;/span&gt; resize cryptlvm&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;cryptsetup status cryptlvm&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;parted /dev/sda&lt;br /&gt;&amp;nbsp;&lt;br /&gt;resize&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&#34;http://xyne.archlinux.ca/etc/dyn/img/graphviz/Pacserve_Request_Flow_Chart.svg&#34;&gt;&lt;/p&gt;
+&lt;!--  vim: set spell: --&gt;
+
+&lt;!--  vim: set spelllang=es: --&gt;
+
+&lt;!--  vim: set filetype=markdown: --&gt;      
+          </content>
+  </entry>
+    <entry>
+    <title type="html">Configurando Pacserve y Powerpill en Arch Linux</title>
+    <author><name></name></author>
+    <link href="http://www.albertdelafuente.com/es/blog/2015/arch-configuring-pacsrv.html"/>
+    <updated>2015-10-21T01:20:00Z</updated>
+    <published>2015-10-21T01:20:00Z</published>
+    <id>/es/blog/2015/arch-configuring-pacsrv.html</id>
+        <category   scheme="/tags/"
+                term="Arch"
+                label="Arch" />
+        <category   scheme="/tags/"
+                term="Python"
+                label="Python" />
+    
+    <content type="html">
+                  &lt;h2&gt;Intro&lt;/h2&gt;
+&lt;p&gt;En este post explico como configurar y usar &lt;code&gt;Pacserve&lt;/code&gt; and &lt;code&gt;Powerpill&lt;/code&gt; en
+Arch Linux.&lt;/p&gt;
+&lt;p&gt;The documentation of &lt;a href=&#34;http://xyne.archlinux.ca/projects/pacserve/&#34;&gt;Pacserve&lt;/a&gt; explains how it works. This image summarizes
+well the behavior.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://xyne.archlinux.ca/etc/dyn/img/graphviz/Pacserve_Request_Flow_Chart.svg&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Pacserve by itself seems very interesting however I could not make it work
+properly. I think it has something to do my router UDP multicast forwarding
+support (see &lt;a href=&#34;http://wiki.openwrt.org/doc/recipes/dumbap&#34;&gt;openwrt-multicast&lt;/a&gt;). Nevertheless, I could use it within
+&lt;a href=&#34;http://xyne.archlinux.ca/projects/powerpill/&#34;&gt;Powerpill&lt;/a&gt; which is a pacman wrapper to allow parallel and segmented downloads
+through &lt;a href=&#34;http://aria2.sourceforge.net/&#34;&gt;Aria2&lt;/a&gt; and &lt;a href=&#34;http://xyne.archlinux.ca/projects/reflector/&#34;&gt;Reflector&lt;/a&gt;.  This combo sounds even better, so I will focus on
+how to install and use the tree tools together.&lt;/p&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;c&#34;&gt;# Just in case the testdb does not exists&lt;/span&gt;&lt;br /&gt;gpg --list-key&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Receive xyne gpg key&lt;/span&gt;&lt;br /&gt;gpg --recv-keys 1D1F0DC78F173680&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Install the packages&lt;/span&gt;&lt;br /&gt;yaourt -Sy --noconfirm reflector pacserve powerpill&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2&gt;Starting the services (both the Master and Slave(s) host(s))&lt;/h2&gt;
+&lt;p&gt;After everything is installed:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;c&#34;&gt;# Enable opening the ports&lt;/span&gt;&lt;br /&gt;sudo systemctl &lt;span class=&#34;nb&#34;&gt;enable &lt;/span&gt;pacserve-ports.service&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Enable pacserve&lt;/span&gt;&lt;br /&gt;sudo systemctl &lt;span class=&#34;nb&#34;&gt;enable &lt;/span&gt;pacserve.service&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Start pacserve&lt;/span&gt;&lt;br /&gt;sudo systemctl start pacserve.service&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+For troubleshooting purposes the services can be started manually. See the
+Troubleshooting section if you have problems.&lt;/p&gt;
+&lt;h2&gt;Configuring Powerpill to use the Master server (Slave(s) hosts only)&lt;/h2&gt;
+&lt;p&gt;Edit the file &lt;code&gt;/etc/powerpill/powerpill.json&lt;/code&gt; to include the &lt;code&gt;pacserve&lt;/code&gt;.&lt;code&gt;serve&lt;/code&gt;
+attribute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;aria2&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;args&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--allow-overwrite=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--always-resume=false&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--auto-file-renaming=false&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--check-integrity=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--conditional-get=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--continue=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--file-allocation=none&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--log-level=error&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--max-concurrent-downloads=100&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--max-connection-per-server=5&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--min-split-size=5M&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--remote-time=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--show-console-readout=true&amp;quot;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;/usr/bin/aria2c&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;pacman&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;config&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;/etc/pacman.conf&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;/usr/bin/pacman&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;pacserve&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;server&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;http://192.168.56.6:15678&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;powerpill&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;ask&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;reflect databases&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;reflector&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;args.unused&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--protocol&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--latest&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;50&amp;quot;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;rsync&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;args&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--no-motd&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--progress&amp;quot;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;db only&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;/usr/bin/rsync&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;servers&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+In this example I configured two VMs using Vagrant with an internal network.
+The server runs on &lt;code&gt;192.168.56.6&lt;/code&gt; on port &lt;code&gt;15678&lt;/code&gt; (default port).&lt;/p&gt;
+&lt;p&gt;After this we can use Powerpill as a replacement of Pacman as follows&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;c&#34;&gt;# System upgrade&lt;/span&gt;&lt;br /&gt;sudo powerpill -Syu&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Install a package&lt;/span&gt;&lt;br /&gt;sudo powerpill -S wget&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;When &lt;a href=&#34;http://xyne.archlinux.ca/projects/powerpill/&#34;&gt;powerpill&lt;/a&gt; is used..&lt;/p&gt;
+&lt;h2&gt;TODOs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Check how to have only &lt;strong&gt;one&lt;/strong&gt; Master DB and all the Slaves also sync the DB
+from the master&lt;/li&gt;
+&lt;li&gt;Use reflector commands within Powerpill&lt;/li&gt;
+&lt;li&gt;What happens if different architectures are on the same network and UDP
+multicast works?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Troubleshooting Pacserve (without Powerpill)&lt;/h2&gt;
+&lt;p&gt;As I said before I could not make it working using multicast, so I had to
+manually start the Pacserve Master host as:&lt;/p&gt;
+&lt;p&gt;Input:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;pacserve --multicast&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Output:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;PacserveServer&lt;br /&gt;  PID                  1048&lt;br /&gt;  Addresses&lt;br /&gt;    lo:     127.0.0.1&lt;br /&gt;    eth0:   10.0.2.15&lt;br /&gt;    enp0s9: 192.168.56.6&lt;br /&gt;  Port                 15678&lt;br /&gt;  Multicast Address    all interfaces&lt;br /&gt;  Multicast Port       15679&lt;br /&gt;  Multicast Group      224.3.45.67&lt;br /&gt;  Multicast Interval   5m&lt;br /&gt;  Multicast Interfaces all&lt;br /&gt;  Filelist             None&lt;br /&gt;  Filterlist           None&lt;br /&gt;  MOTD                 None&lt;br /&gt;  Upload Directory     None&lt;br /&gt;  Paths                None&lt;br /&gt;  Static Peers         None&lt;br /&gt;&amp;nbsp;&lt;br /&gt;Press ctrl+C to exit.&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:54:54 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcing presence by multicast &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;group: 224.3.45.67&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:54:54 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcement sent via all interfaces&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Assuming the server is running with the IP &lt;code&gt;192.168.56.6&lt;/code&gt;, you can manually
+start Pacserve on the Slave(s) hosts as:&lt;/p&gt;
+&lt;p&gt;Input:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;pacserve --multicast --peer &lt;span class=&#34;s2&#34;&gt;&amp;quot;http://192.168.56.6:15678&amp;quot;&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Output:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;PacserveServer&lt;br /&gt;  PID                  1102&lt;br /&gt;  Addresses&lt;br /&gt;    lo:     127.0.0.1&lt;br /&gt;    eth0:   10.0.2.15&lt;br /&gt;    enp0s9: 192.168.56.7&lt;br /&gt;  Port                 15678&lt;br /&gt;  Multicast Address    all interfaces&lt;br /&gt;  Multicast Port       15679&lt;br /&gt;  Multicast Group      224.3.45.67&lt;br /&gt;  Multicast Interval   5m&lt;br /&gt;  Multicast Interfaces all&lt;br /&gt;  Filelist             None&lt;br /&gt;  Filterlist           None&lt;br /&gt;  MOTD                 None&lt;br /&gt;  Upload Directory     None&lt;br /&gt;  Paths                None&lt;br /&gt;  Static Peers         http://192.168.56.6:15678&lt;br /&gt;&amp;nbsp;&lt;br /&gt;Press ctrl+C to exit.&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:00 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcing presence via POST to http://192.168.56.6:15678&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:00 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: POSTing to http://192.168.56.6:15678/ &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;type&lt;/span&gt;: nudge&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:01 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcing presence by multicast &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;group: 224.3.45.67&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:01 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcement sent via all interfaces&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+After starting the Slave host you should get the following message on the Master console:
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:00 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: added http://192.168.56.7:15678/ &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;POST&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:00 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: 192.168.56.7 &lt;span class=&#34;s2&#34;&gt;&amp;quot;POST / HTTP/1.1&amp;quot;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;200&lt;/span&gt; -&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;!--  vim: set spell: --&gt;
+
+&lt;!--  vim: set spelllang=en: --&gt;
+
+&lt;!--  vim: set filetype=htmldjango: --&gt;      
+          </content>
+  </entry>
+  
+
+
+</feed>

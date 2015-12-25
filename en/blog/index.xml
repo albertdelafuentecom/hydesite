@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="http://www.albertdelafuente.com">
+  <title>
+    albert:/dev/blog  </title>
+    <link href="http://www.albertdelafuente.com/en/blog/index.xml" rel="self" />
+  
+    <link href="http://www.albertdelafuente.com/blog/"/>
+  
+    
+  <updated>2015-12-25T01:16:57Z</updated>
+
+  <id>http://www.albertdelafuente.com/en/blog/index.xml</id>
+
+      <entry>
+    <title type="html">Hyde series: Multilanguage sites config (part 2)</title>
+    <author><name></name></author>
+    <link href="http://www.albertdelafuente.com/en/blog/2015/2015-11-12-hyde-multilanguage-sites-config.html"/>
+    <updated>2015-11-12T09:30:00Z</updated>
+    <published>2015-11-12T09:30:00Z</published>
+    <id>/en/blog/2015/2015-11-12-hyde-multilanguage-sites-config.html</id>
+        <category   scheme="/tags/"
+                term="Hyde"
+                label="Hyde" />
+        <category   scheme="/tags/"
+                term="Python"
+                label="Python" />
+    
+    <content type="html">
+                  &lt;h2&gt;Intro&lt;/h2&gt;
+&lt;p&gt;On my prior post I showed how to setup Hyde. This is the next post of the
+Hyde series in which I will show how to setup a multi-language site with
+Hyde.&lt;/p&gt;
+&lt;p&gt;I want acknowledge that I have taken some parts from the setup of &lt;a href=&#34;http://vincent.bernat.im&#34;&gt;Vincent
+Bernat&lt;/a&gt; and thank &lt;a href=&#34;https://github.com/lakshmivyas&#34;&gt;@lakshmivyas&lt;/a&gt; for his great help, support and patience
+helping me out with the multi-language support.&lt;/p&gt;
+&lt;h2&gt;Tutorial overview&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;2015-11-11-hyde-intro-setup.html&#34;&gt;Intro and setup&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;2015-11-12-hyde-multilanguage-sites-config.html&#34;&gt;Multilanguage sites config&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Assumptions&lt;/h2&gt;
+&lt;p&gt;I assume that you read the prior post(s) of the &lt;a href=&#34;/en/tags/Hyde.html&#34;&gt;Hyde series&lt;/a&gt;. Therefore I won&#39;t
+go into details about the installation again and just focus on explaining how
+multi-language with Hyde works. Just to recap, this is the second part of the
+series.&lt;/p&gt;
+&lt;h2&gt;Folder structure&lt;/h2&gt;
+&lt;p&gt;I will explain the details of the parts to understand how it works. I will show
+a simplified overview of the folder. Some folders have been removed to keep
+things clean.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nv&#34;&gt;$ &lt;/span&gt;tree -d .&lt;br /&gt;.&lt;br /&gt;├── content&lt;br /&gt;│   ├── en&lt;br /&gt;│   │   ├── blog&lt;br /&gt;│   │   ├── home&lt;br /&gt;│   │   ├── jumbo&lt;br /&gt;│   │   ├── offcanvas&lt;br /&gt;│   │   └── tags&lt;br /&gt;│   ├── fr&lt;br /&gt;│   │   ├── blog&lt;br /&gt;│   │   ├── home&lt;br /&gt;│   │   ├── jumbo&lt;br /&gt;│   │   ├── offcanvas&lt;br /&gt;│   │   └── tags&lt;br /&gt;│   └── media&lt;br /&gt;│       ├── css&lt;br /&gt;│       ├── img&lt;br /&gt;│       └── js&lt;br /&gt;├── deploy&lt;br /&gt;└── layout&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+* The &lt;code&gt;Content&lt;/code&gt; folder:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;This folder also contains the `media` folder which will hold the CSS, images and
+Javascript files. It also contain one folder per language.  These type of
+folders will be explain in the next section.
+
+The main `index.html` only runs a script to detect the browser language an
+redirect to the appropriate language version of the website. If the browser
+language does not match an existing language it will fallback to the default
+which is English.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;Language&lt;/code&gt; folders&lt;/p&gt;
+&lt;p&gt;As I said there is a language folder for each language you want to use. For
+simplicity I used only two letters language coding standard, &lt;code&gt;en&lt;/code&gt; and &lt;code&gt;fr&lt;/code&gt; in
+this example. Within each language folder is the structure of the website itself
+(the &lt;code&gt;sections&lt;/code&gt;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;Sections&lt;/code&gt; folders&lt;/p&gt;
+&lt;p&gt;Within each language you will find the structure of the website where each section is
+a folder.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Content&lt;/h2&gt;
+&lt;p&gt;Both the language folder and the sections must contain a &lt;code&gt;meta.yaml&lt;/code&gt; that
+describe that particular part of the website.&lt;/p&gt;
+&lt;h4&gt;The &lt;code&gt;language&lt;/code&gt; metafile&lt;/h4&gt;
+&lt;p&gt;Each &lt;code&gt;language&lt;/code&gt; folder must contain a &lt;code&gt;meta.yaml&lt;/code&gt; file with some basic content
+(YMMV). This is an example of the &lt;code&gt;en&lt;/code&gt; meta.yaml file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;l-Scalar-Plain&#34;&gt;extends&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l-Scalar-Plain&#34;&gt;base.j2&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;l-Scalar-Plain&#34;&gt;default_block&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l-Scalar-Plain&#34;&gt;blog&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;l-Scalar-Plain&#34;&gt;language&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l-Scalar-Plain&#34;&gt;en&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;l-Scalar-Plain&#34;&gt;l10n&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;l-Scalar-Plain&#34;&gt;created_by&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Created&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;by&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;l-Scalar-Plain&#34;&gt;posted&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Posted&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;l-Scalar-Plain&#34;&gt;tags&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Tags&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;l-Scalar-Plain&#34;&gt;readmore&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Read&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;more&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;l-Scalar-Plain&#34;&gt;translations&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;quot;Also&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;available&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;in&amp;quot;&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+The most important parts here are the &lt;code&gt;language&lt;/code&gt; section which should match the
+name of the &lt;code&gt;language&lt;/code&gt; folder. The &lt;code&gt;localization&lt;/code&gt; (or &lt;code&gt;l10n&lt;/code&gt; for short), which
+contains the &lt;code&gt;strings&lt;/code&gt; that are common to the template but need to be
+translated.&lt;/p&gt;
+&lt;h4&gt;The &lt;code&gt;section&lt;/code&gt; metafile&lt;/h4&gt;
+&lt;p&gt;In a similar way, each section must contain a &lt;code&gt;meta.yaml&lt;/code&gt; file. Here is an
+example of the &lt;code&gt;blog&lt;/code&gt; section.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;l-Scalar-Plain&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l-Scalar-Plain&#34;&gt;Blog&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;l-Scalar-Plain&#34;&gt;extends&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l-Scalar-Plain&#34;&gt;blog.j2&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;l-Scalar-Plain&#34;&gt;listable&lt;/span&gt;&lt;span class=&#34;p-Indicator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;l-Scalar-Plain&#34;&gt;true&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+The idea is
+similar, however this file only contains:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;code&gt;title&lt;/code&gt; of that section. This will appear on the menu when it is
+dynamically parsed&lt;/li&gt;
+&lt;li&gt;From which Jinja template &lt;code&gt;extends&lt;/code&gt; from (blog.j2),&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;listable&lt;/code&gt; in case the section must not appear on the menu&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Of course you can tailor this to your needs, to add for instance an icon for
+each section or split the localization another level or any other information
+used by that section. The limit is your imagination.&lt;/p&gt;
+&lt;h4&gt;The &lt;code&gt;site.yaml&lt;/code&gt; file&lt;/h4&gt;
+&lt;p&gt;Now that you are familiar with the folder structure and files for each language
+we will see how to link everything together on the &lt;code&gt;site.yaml&lt;/code&gt; file. You can
+find this file on the root of the project (parent of the &lt;code&gt;content&lt;/code&gt; folder).&lt;/p&gt;
+&lt;p&gt;Among the basic sections of every Hyde project this file must use the
+&lt;code&gt;hyde.ext.plugins.languages.LanguagePlugin&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you have a blog and you need to parse the tags, then you will have to
+include the &lt;code&gt;tagger&lt;/code&gt; section and the &lt;code&gt;archives&lt;/code&gt; section within it (&lt;code&gt;tagger.archive&lt;/code&gt; for
+short). Inside you need to include the following block (per each language):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;context:&lt;br /&gt;  data:&lt;br /&gt;    ...&lt;br /&gt;    languages:&lt;br /&gt;      fr: Français&lt;br /&gt;      en: English&lt;br /&gt;&amp;nbsp;&lt;br /&gt;tagger:&lt;br /&gt;  sorter: &lt;span class=&#34;nb&#34;&gt;time&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;nb&#34;&gt;  &lt;/span&gt;archives:&lt;br /&gt;    blog_en:&lt;br /&gt;      &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt;: en/blog&lt;br /&gt;      target: en/tags&lt;br /&gt;      template: tagged_posts.j2&lt;br /&gt;      extension: html&lt;br /&gt;  tags:&lt;br /&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;quot;happy&amp;quot;&lt;/span&gt;:&lt;br /&gt;      descr_en: &lt;span class=&#34;s2&#34;&gt;&amp;quot;Happy&amp;quot;&lt;/span&gt;&lt;br /&gt;      descr_fr: &lt;span class=&#34;s2&#34;&gt;&amp;quot;Content&amp;quot;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;quot;angry&amp;quot;&lt;/span&gt;:&lt;br /&gt;      descr_en: &lt;span class=&#34;s2&#34;&gt;&amp;quot;Angry&amp;quot;&lt;/span&gt;&lt;br /&gt;      descr_fr: &lt;span class=&#34;s2&#34;&gt;&amp;quot;Colère&amp;quot;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;quot;sad&amp;quot;&lt;/span&gt;:&lt;br /&gt;      descr_en: &lt;span class=&#34;s2&#34;&gt;&amp;quot;Sad&amp;quot;&lt;/span&gt;&lt;br /&gt;      descr_fr: &lt;span class=&#34;s2&#34;&gt;&amp;quot;Triste&amp;quot;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;quot;thoughts&amp;quot;&lt;/span&gt;:&lt;br /&gt;      descr_en: &lt;span class=&#34;s2&#34;&gt;&amp;quot;Thoughts&amp;quot;&lt;/span&gt;&lt;br /&gt;      descr_fr: &lt;span class=&#34;s2&#34;&gt;&amp;quot;Pensées&amp;quot;&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+The &lt;code&gt;context.data.languages&lt;/code&gt; must list the languages available on the
+website.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;tagger.archives.template&lt;/code&gt; used here will be rendered when you click on a
+tag, in this case is just a simple list of the posts with that particular tag.
+Of course there are other parts on the file but this post focus only on the
+multi-language features.&lt;/p&gt;
+&lt;h4&gt;The metadata of a post&lt;/h4&gt;
+&lt;p&gt;Each post must be within a &lt;code&gt;language&lt;/code&gt; folder and a &lt;code&gt;section&lt;/code&gt; folder. If a
+particular post has a translation, then it should have a unique identifier that
+somehow links those posts. This is what the &lt;code&gt;uuid&lt;/code&gt; field is for. Here is an
+example&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;x&#34;&gt;---&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;title: A Happy Post&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;created: !!timestamp &amp;#39;2011-02-01 10:00:00&amp;#39;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;uuid: 7ef1dd49-92be-4aea-b96f-f91ab1b84f06&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;tags:&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;    - happy&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;    - thoughts&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;---&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;mark&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;image&lt;/span&gt; -&lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;![Airport](&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;media_url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;img/airport.png&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt;- &lt;span class=&#34;k&#34;&gt;endmark&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;mark&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;excerpt&lt;/span&gt; -&lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;Lady Malvern was a hearty, happy, healthy, overpowering sort of dashed female,&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;not so very tall but making up for it by measuring about six feet from the&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;O.P. to the Prompt Side.&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt;- &lt;span class=&#34;k&#34;&gt;endmark&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;She fitted into my biggest arm-chair as if it had&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;been built round her by someone who knew they were wearing arm-chairs tight&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Note the &lt;code&gt;uuid&lt;/code&gt; field mentioned before, as the tags. The tags as I already said
+can also be translated if necessary.&lt;/p&gt;
+&lt;h2&gt;Tagging&lt;/h2&gt;
+&lt;p&gt;Here is an interesting snippet pattern kindly contributed by [@laksmivyas]. The
+first part creates a dict of the items (i.e: posts or pages) within a language.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag_dict&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{}&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;site.tagger.tags&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag_res&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;res&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;meta.resources&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lang_root&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;site.content.source_folder.child_folder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;res.meta.language&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.node.source_folder.is_descendant_of&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lang_root&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;or&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.node.source_folder&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lang_root&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag_res.append&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;res&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;endif&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;endfor&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;x&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag_dict.update&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;({&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;meta.name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag_res&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;})&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;endfor&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;x&#34;&gt;&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Then to query all the posts tagged as &#39;system&#39; is as simple as
+&lt;code&gt;tag_dict[&#39;system&#39;]&lt;/code&gt;. To list those items is as simple as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;section&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;archives&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lang&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.meta.language&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;&lt;br /&gt;        &lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;site.tagger.tags&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag.name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;attr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;quot;descr_&amp;quot;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lang&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;site.tagger.tags&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag.name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;.descr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag_dict&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag.name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; -&lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;        &lt;span class=&#34;nt&#34;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;row-fluid&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;span2&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;small&amp;gt;&lt;/span&gt;&lt;br /&gt;                    &lt;span class=&#34;nt&#34;&gt;&amp;lt;time&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;datetime=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.meta.created.strftime&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%Y-%m-%d&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;                        &lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.meta.created.strftime&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%a, %d %b %Y&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;br /&gt;                    &lt;span class=&#34;nt&#34;&gt;&amp;lt;/time&amp;gt;&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;/small&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;span7&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;strong&amp;gt;&lt;/span&gt;&lt;br /&gt;                    &lt;span class=&#34;nt&#34;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;href=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;content_url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;resource.url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.meta.title&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;/strong&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;span3&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;pull-right&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;                    &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.meta.tags&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;                        &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.meta.tags&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;                            &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag_url&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lang&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;content_url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;tags/&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;.html&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;                            &lt;span class=&#34;nt&#34;&gt;&amp;lt;span&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;badge badge-inverse&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;                                &lt;span class=&#34;nt&#34;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;href=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;/&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tag_url&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;                                    &lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;site.tagger.tags&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;attr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;quot;descr_&amp;quot;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lang&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;site.tagger.tags&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;.descr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;br /&gt;                                &lt;span class=&#34;nt&#34;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;&lt;br /&gt;                            &lt;span class=&#34;nt&#34;&gt;&amp;lt;/span&amp;gt;&lt;/span&gt;&lt;br /&gt;                        &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;endfor&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;                    &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;endif&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;br /&gt;        &lt;span class=&#34;nt&#34;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt;- &lt;span class=&#34;k&#34;&gt;endfor&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+As you can see the &lt;code&gt;h1&lt;/code&gt; tags hold the tag title, which can be obtained as &lt;code&gt;site.tagger.tags[tag.name]|attr(&#34;descr_&#34; + lang)|e&lt;/code&gt;. This first part uses the
+&lt;code&gt;descr_&amp;lt;lang&amp;gt;&lt;/code&gt; local translation. If this translation do not exist, then the
+second part &lt;code&gt;site.tagger.tags[tag.name].descr|e&lt;/code&gt;. The first part uses the falls
+back to the standard &lt;code&gt;descr&lt;/code&gt; translation.&lt;/p&gt;
+&lt;h2&gt;&#39;This post is also available in another language&#39;&lt;/h2&gt;
+&lt;p&gt;If you want to show the languages available for a specific post is as simple as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.translations&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;id=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;langnavbar&amp;quot;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;nav navbar-nav pull-right navbar-lang navbar-collapse collapse&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;        &lt;span class=&#34;nt&#34;&gt;&amp;lt;ul&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;nav navbar-nav pull-right navbar-lang&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;li&amp;gt;&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.meta.l10n.translations&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;e&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;:&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;translation&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.translations&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;li&amp;gt;&lt;/span&gt;&lt;br /&gt;                    &lt;span class=&#34;nt&#34;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;href=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;content_url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;translation.url&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;languages&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;translation.meta.language&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;endfor&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;        &lt;span class=&#34;nt&#34;&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;endif&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+The first &lt;code&gt;li&lt;/code&gt; item is the string &#39;This post is also available in&#39; itself,
+which by the way, should also be translated and therefore it has been pulled to
+the &lt;code&gt;meta.yaml&lt;/code&gt; at the &lt;code&gt;language&lt;/code&gt; level (&lt;code&gt;Also available in&lt;/code&gt; variable). The &lt;code&gt;resources.translations&lt;/code&gt; dictionary contain the languages available for a particular &lt;code&gt;uuid&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Rendering the menu&lt;/h2&gt;
+&lt;p&gt;The menu of course it is also multi-language. It is dynamically parsed by the following macro:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;macro&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;render_main_menu&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; -&lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;lt;li&amp;gt;&lt;/span&gt;&lt;br /&gt;        &lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.meta.language&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lang_root&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;site.content.node_from_relative_path&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;resource.meta.language&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;en&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;menu_item&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lang_root.child_nodes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;sort&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;attribute&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;        &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;menu_item.meta.listable&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;li&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;menu_item.full_url&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;resource.full_url&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;active&amp;quot;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;endif&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;href=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;menu_item.full_url&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;&lt;br /&gt;                    &lt;span class=&#34;cp&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;menu_item.meta.title&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;capitalize&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;}}&lt;/span&gt;&lt;br /&gt;                &lt;span class=&#34;nt&#34;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;&lt;br /&gt;            &lt;span class=&#34;nt&#34;&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;&lt;br /&gt;        &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;endif&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt;- &lt;span class=&#34;k&#34;&gt;endfor&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;cp&#34;&gt;{%&lt;/span&gt;- &lt;span class=&#34;k&#34;&gt;endmacro&lt;/span&gt; &lt;span class=&#34;cp&#34;&gt;%}&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Basically this will list all the &lt;code&gt;sections&lt;/code&gt; within a &lt;code&gt;language&lt;/code&gt; and will show
+the correspondent title of that section. This is found on the &lt;code&gt;meta.yaml&lt;/code&gt; file
+of that section.&lt;/p&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;As you can see it is not that hard to build a multi-language site with Hyde. I
+believe that in future releases this multi-language feature will be embedded
+within Hyde core. This could make things even easier for the user, we will see.&lt;/p&gt;
+&lt;p&gt;Thanks for reading. Spot an error or want to explain something better, feel
+free to send me a PR.&lt;/p&gt;
+&lt;!--  vim: set spell: --&gt;
+
+&lt;!--  vim: set spelllang=en: --&gt;
+
+&lt;!--  vim: set filetype=htmldjango: --&gt;      
+          </content>
+  </entry>
+    <entry>
+    <title type="html">Hyde series: Intro and setup (part 1)</title>
+    <author><name></name></author>
+    <link href="http://www.albertdelafuente.com/en/blog/2015/2015-11-11-hyde-intro-setup.html"/>
+    <updated>2015-11-11T09:30:00Z</updated>
+    <published>2015-11-11T09:30:00Z</published>
+    <id>/en/blog/2015/2015-11-11-hyde-intro-setup.html</id>
+        <category   scheme="/tags/"
+                term="Hyde"
+                label="Hyde" />
+        <category   scheme="/tags/"
+                term="Python"
+                label="Python" />
+    
+    <content type="html">
+                  &lt;h2&gt;Intro&lt;/h2&gt;
+&lt;p&gt;This post will show how to setup a simple website using Hyde, a static website
+generator written in Python. The simplicity of the end result can be hosted
+anywhere and you will be able to write some of the content in Markdown if you
+want. This is very convenient for the simplicity of the markup and it is
+something very easy to learn.&lt;/p&gt;
+&lt;p&gt;Probably some of you have already heard of &lt;a href=&#34;https://jekyllrb.com/&#34;&gt;Jekyll&lt;/a&gt;, a static website static
+generator written in Ruby. If you have not, you might be wondering, what is a
+website static generator? Well, nowadays developing a website in plain HTML
+by itself it just not enough, so you will need some scripting language like PHP,
+or Python or similar. Of course you will need also a hosting service that is
+able to execute that language you chose, and you will probably need,
+additionally a database. I think you got the idea...&lt;/p&gt;
+&lt;p&gt;To setup the environment of all those components might not be trivial in some
+cases and it could probably incur in some cost. One of the advantages of static
+websites generators is that they will work similarly as if you had a scripting
+language but they will produce a static website. So it will not need some
+of the components like databases or a scripting language to execute server code.
+So it can be resumed to the following phrase: text + templates = html files.
+This is pretty much convenient for cheap or free hosting and to reduce
+complexity of deploys. In the past I read that some government websites where
+also switching to static websites generators due to the high traffic they had,
+in this sense their site will basically depends on a HTTP server and it is
+easier to scale to the demands.&lt;/p&gt;
+&lt;p&gt;I would say that the most popular static website generator nowadays is probably
+Jekyll due to Github&#39;s integration. However I prefer a Python stack whenever
+possible, since I am more familiar with; this is why I have chosen &lt;a href=&#34;http://hyde.github.io/&#34;&gt;Hyde&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Once you have Hyde installed the workflow is quite simple, everytime you modify
+your &lt;code&gt;content&lt;/code&gt; you need to &lt;code&gt;generate&lt;/code&gt; the site. This is somehow analogous to
+&lt;code&gt;compile&lt;/code&gt; your software when using a programming language.&lt;/p&gt;
+&lt;p&gt;I want acknowledge and thank &lt;a href=&#34;http://julien.danjou.info&#34;&gt;Julien Danjou&lt;/a&gt; and &lt;a href=&#34;https://github.com/lakshmivyas&#34;&gt;@lakshmivyas&lt;/a&gt; for their help
+and support with my first steps with Hyde; as &lt;a href=&#34;https://evilham.com/en/about&#34;&gt;Andres&lt;/a&gt; for encouraging me into
+writing these &lt;a href=&#34;/en/tags/Hyde.html&#34;&gt;hyde series&lt;/a&gt; posts.&lt;/p&gt;
+&lt;h2&gt;Tutorial overview&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;2015-11-11-hyde-intro-setup.html&#34;&gt;Intro and setup&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;2015-11-12-hyde-multilanguage-sites-config.html&#34;&gt;Multilanguage sites config&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;I will assume that you are familiar with Python, pip and git. I have built a
+Fabric file to automate the building process. This is similar to using
+Makefiles. For the sake of simplicity I bundled all the files within a single
+repository. I thought about splitting the content from the template itself, and
+I believe this would be nice, however right now I am still in doubt what is the
+right way and time, so I won&#39;t right now and I will try to keep it as simple as
+possible. Use the following steps to install Hyde and the dependencies. The
+snippet is self explanatory.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;c&#34;&gt;# Clone the repository&lt;/span&gt;&lt;br /&gt;git clone https://github.com/vonpupp/hyde-bootstrap-template.git&lt;br /&gt;&lt;span class=&#34;nb&#34;&gt;cd &lt;/span&gt;hyde-bootstrap-template&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Change to the right place for this tutorial&lt;/span&gt;&lt;br /&gt;git checkout feature/part1&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Create a virtualenv&lt;/span&gt;&lt;br /&gt;virtualenv2 env&lt;br /&gt;&lt;span class=&#34;nb&#34;&gt;source &lt;/span&gt;env/bin/activate&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Install the pip dependencies&lt;/span&gt;&lt;br /&gt;pip2 install -r requirements.txt&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+With this you should be good to go and build the website.&lt;/p&gt;
+&lt;h2&gt;Building the website&lt;/h2&gt;
+&lt;p&gt;There are two steps to build a website. The first is to &lt;code&gt;generate&lt;/code&gt; the site and
+the second is to &lt;code&gt;serve&lt;/code&gt; the website with a webserver. For convenience I have
+tied these two into a single task in a Fabfile.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;c&#34;&gt;# Execute the fabric task&lt;/span&gt;&lt;br /&gt;fab run&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+This will generate and run a local webserver. To access your
+brand new Hyde site just type: &lt;code&gt;http://localhost:8123&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;The resulting website is plain HTML + Javascript + CSS, so it can be hosted
+anywhere easily. You can use Github pages for so or even run your own webserver.&lt;/p&gt;
+&lt;p&gt;If you have followed this tutorial you might think that Hyde is just amazing. If
+so, I would encourage you to get involved in the &lt;a href=&#34;https://groups.google.com/forum/#!forum/hyde-dev&#34;&gt;Hyde community&lt;/a&gt;, we can help
+you out, and of course you can help us out =).&lt;/p&gt;
+&lt;p&gt;For the time being I want to keep the &lt;a href=&#34;/en/tags/Hyde.html&#34;&gt;Hyde series&lt;/a&gt; short and I will end this
+tutorial here. The next tutorial will show how to setup a &lt;a href=&#34;2015-11-12-hyde-multilanguage-sites-config.html&#34;&gt;Multilanguage sites
+config&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;TODOs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;[ ] Include &lt;a href=&#34;http://stefanimhoff.de/2014/gulp-tutorial-1-intro-setup/&#34;&gt;gulp&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;[ ] Include &lt;a href=&#34;https://github.com/Grokzen/pykwalify&#34;&gt;pykwalify&lt;/a&gt; for yaml lint&lt;/li&gt;
+&lt;li&gt;[ ] Include w3m validation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!--  vim: set spell: --&gt;
+
+&lt;!--  vim: set spelllang=en: --&gt;
+
+&lt;!--  vim: set filetype=htmldjango: --&gt;      
+          </content>
+  </entry>
+    <entry>
+    <title type="html">Resizing LVM on LUKS</title>
+    <author><name></name></author>
+    <link href="http://www.albertdelafuente.com/en/blog/2015/2015-11-01-resizing-lvm-on-luks.html"/>
+    <updated>2015-11-01T10:22:00Z</updated>
+    <published>2015-11-01T10:22:00Z</published>
+    <id>/en/blog/2015/2015-11-01-resizing-lvm-on-luks.html</id>
+        <category   scheme="/tags/"
+                term="System"
+                label="System" />
+    
+    <content type="html">
+                  &lt;h2&gt;Intro&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;cryptsetup luksOpen /dev/sda2 cryptlvm&lt;br /&gt;&amp;nbsp;&lt;br /&gt;e2fsck -f /dev/mapper/storage-home&lt;br /&gt;&amp;nbsp;&lt;br /&gt;resize2fs -p /dev/mapper/storage-home 200g&lt;br /&gt;&amp;nbsp;&lt;br /&gt;e2fsck -f /dev/mapper/storage-home&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;lvdisplay&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;lvreduce -L -15.68G /dev/storage/home&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;lvdisplay&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;lvresize -l +100%FREE /dev/storate/root&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;e2fsck -f /dev/mapper/storage-root&lt;br /&gt;&amp;nbsp;&lt;br /&gt;resize2fs /dev/mapper/storage-root&lt;br /&gt;&amp;nbsp;&lt;br /&gt;cryptsetup luksClose /dev/sda2 cryptlvm&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;### NOT NEEDED&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;pvdisplay&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;pvresize --sephysicalvolumesize 218G /dev/mapper/cryptlvm&lt;br /&gt;&amp;nbsp;&lt;br /&gt;/dev/mapper/cryptlvm is active and is in use&lt;br /&gt;  &lt;span class=&#34;nb&#34;&gt;type&lt;/span&gt;:    LUKS1&lt;br /&gt;  cipher:  aes-xts-plain64&lt;br /&gt;  keysize: &lt;span class=&#34;m&#34;&gt;256&lt;/span&gt; bits&lt;br /&gt;  device:  /dev/sda2&lt;br /&gt;  offset:  &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt; sectors&lt;br /&gt;  size:    &lt;span class=&#34;m&#34;&gt;487981391&lt;/span&gt; sectors&lt;br /&gt;  mode:    &lt;span class=&#34;nb&#34;&gt;read&lt;/span&gt;/write&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;nv&#34;&gt;NEW_SECTORS&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; EXISTING_SECTORS * NEW_SIZE_IN_GB / EXISTING_SIZE_IN_GB&lt;br /&gt;&lt;span class=&#34;m&#34;&gt;487981391&lt;/span&gt; * 200.7 / 232.7   &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 420876085&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;487981391&lt;/span&gt; - 15*1024*1024*2 &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 456524111&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;cryptsetup -b &lt;span class=&#34;m&#34;&gt;420876085&lt;/span&gt; resize cryptlvm&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;cryptsetup status cryptlvm&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;parted /dev/sda&lt;br /&gt;&amp;nbsp;&lt;br /&gt;resize&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;img src=&#34;http://xyne.archlinux.ca/etc/dyn/img/graphviz/Pacserve_Request_Flow_Chart.svg&#34;&gt;&lt;/p&gt;
+&lt;!--  vim: set spell: --&gt;
+
+&lt;!--  vim: set spelllang=en: --&gt;
+
+&lt;!--  vim: set filetype=htmldjango: --&gt;      
+          </content>
+  </entry>
+    <entry>
+    <title type="html">Configuring Pacserve and Powerpill on Arch Linux</title>
+    <author><name></name></author>
+    <link href="http://www.albertdelafuente.com/en/blog/2015/2015-10-21-arch-configuring-pacsrv.html"/>
+    <updated>2015-10-21T01:20:00Z</updated>
+    <published>2015-10-21T01:20:00Z</published>
+    <id>/en/blog/2015/2015-10-21-arch-configuring-pacsrv.html</id>
+        <category   scheme="/tags/"
+                term="Arch"
+                label="Arch" />
+        <category   scheme="/tags/"
+                term="Python"
+                label="Python" />
+    
+    <content type="html">
+                  &lt;h2&gt;Intro&lt;/h2&gt;
+&lt;p&gt;On this post I will show how to configure and use &lt;code&gt;Pacserve&lt;/code&gt; and &lt;code&gt;Powerpill&lt;/code&gt; on
+Arch Linux. On a network of several Arch Linux boxes, it is possible to
+configure a &lt;code&gt;Master&lt;/code&gt; server which will hold a copy of all the installed packages
+within that host and keep it up to date frequently.  The other hosts on the
+network can be configured as &lt;code&gt;Slaves&lt;/code&gt; and they will download the packages from
+the Master whenever possible instead of the Internet directly. The objective is
+to save bandwidth and time when using the package manager.&lt;/p&gt;
+&lt;p&gt;The documentation of &lt;a href=&#34;http://xyne.archlinux.ca/projects/pacserve/&#34;&gt;Pacserve&lt;/a&gt; explains how it works. This image summarizes
+well the behavior.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/media/images/blog/2015/Pacserve_Network_Topology_Example.svg&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Pacserve by itself seems very interesting however I could not make it work
+properly. I think it has something to do my router UDP multicast forwarding
+support (see &lt;a href=&#34;http://wiki.openwrt.org/doc/recipes/dumbap&#34;&gt;openwrt-multicast&lt;/a&gt;). Nevertheless, I could use it within
+&lt;a href=&#34;http://xyne.archlinux.ca/projects/powerpill/&#34;&gt;Powerpill&lt;/a&gt; which is a pacman wrapper to allow parallel and segmented downloads
+through &lt;a href=&#34;http://aria2.sourceforge.net/&#34;&gt;Aria2&lt;/a&gt; and &lt;a href=&#34;http://xyne.archlinux.ca/projects/reflector/&#34;&gt;Reflector&lt;/a&gt;.  This combo sounds even better, so I will focus on
+how to install and use the tree tools together.&lt;/p&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;c&#34;&gt;# Just in case the testdb does not exists&lt;/span&gt;&lt;br /&gt;gpg --list-key&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Receive xyne gpg key&lt;/span&gt;&lt;br /&gt;gpg --recv-keys 1D1F0DC78F173680&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Install the packages&lt;/span&gt;&lt;br /&gt;yaourt -Sy --noconfirm reflector pacserve powerpill&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2&gt;Starting the services (both the Master and Slave(s) host(s))&lt;/h2&gt;
+&lt;p&gt;After everything is installed:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;c&#34;&gt;# Enable opening the ports&lt;/span&gt;&lt;br /&gt;sudo systemctl &lt;span class=&#34;nb&#34;&gt;enable &lt;/span&gt;pacserve-ports.service&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Enable pacserve&lt;/span&gt;&lt;br /&gt;sudo systemctl &lt;span class=&#34;nb&#34;&gt;enable &lt;/span&gt;pacserve.service&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Start pacserve&lt;/span&gt;&lt;br /&gt;sudo systemctl start pacserve.service&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+For troubleshooting purposes the services can be started manually. See the
+Troubleshooting section if you have problems.&lt;/p&gt;
+&lt;h2&gt;Configuring Powerpill to use the Master server (Slave(s) hosts only)&lt;/h2&gt;
+&lt;p&gt;Edit the file &lt;code&gt;/etc/powerpill/powerpill.json&lt;/code&gt; to include the &lt;code&gt;pacserve&lt;/code&gt;.&lt;code&gt;serve&lt;/code&gt;
+attribute:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;aria2&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;args&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--allow-overwrite=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--always-resume=false&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--auto-file-renaming=false&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--check-integrity=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--conditional-get=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--continue=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--file-allocation=none&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--log-level=error&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--max-concurrent-downloads=100&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--max-connection-per-server=5&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--min-split-size=5M&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--remote-time=true&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--show-console-readout=true&amp;quot;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;/usr/bin/aria2c&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;pacman&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;config&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;/etc/pacman.conf&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;/usr/bin/pacman&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;pacserve&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;server&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;http://192.168.56.6:15678&amp;quot;&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;powerpill&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;ask&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;reflect databases&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;reflector&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;args.unused&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--protocol&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--latest&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;50&amp;quot;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;quot;rsync&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;args&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--no-motd&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;      &lt;span class=&#34;s2&#34;&gt;&amp;quot;--progress&amp;quot;&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;db only&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;quot;/usr/bin/rsync&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;br /&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;quot;servers&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;&lt;br /&gt;  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+In this example I configured two VMs using Vagrant with an internal network.
+The server runs on &lt;code&gt;192.168.56.6&lt;/code&gt; on port &lt;code&gt;15678&lt;/code&gt; (default port).&lt;/p&gt;
+&lt;p&gt;After this we can use Powerpill as a replacement of Pacman as follows&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;c&#34;&gt;# System upgrade&lt;/span&gt;&lt;br /&gt;sudo powerpill -Syu&lt;br /&gt;&amp;nbsp;&lt;br /&gt;&lt;span class=&#34;c&#34;&gt;# Install a package&lt;/span&gt;&lt;br /&gt;sudo powerpill -S wget&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;When &lt;a href=&#34;http://xyne.archlinux.ca/projects/powerpill/&#34;&gt;powerpill&lt;/a&gt; is used..&lt;/p&gt;
+&lt;h2&gt;TODOs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Check how to have only &lt;strong&gt;one&lt;/strong&gt; Master DB and all the Slaves also sync the DB
+from the master&lt;/li&gt;
+&lt;li&gt;Use reflector commands within Powerpill&lt;/li&gt;
+&lt;li&gt;What happens if different architectures are on the same network and UDP
+multicast works?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Troubleshooting Pacserve (without Powerpill)&lt;/h2&gt;
+&lt;p&gt;As I said before I could not make it working using multicast, so I had to
+manually start the Pacserve Master host as:&lt;/p&gt;
+&lt;p&gt;Input:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;pacserve --multicast&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Output:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;PacserveServer&lt;br /&gt;  PID                  1048&lt;br /&gt;  Addresses&lt;br /&gt;    lo:     127.0.0.1&lt;br /&gt;    eth0:   10.0.2.15&lt;br /&gt;    enp0s9: 192.168.56.6&lt;br /&gt;  Port                 15678&lt;br /&gt;  Multicast Address    all interfaces&lt;br /&gt;  Multicast Port       15679&lt;br /&gt;  Multicast Group      224.3.45.67&lt;br /&gt;  Multicast Interval   5m&lt;br /&gt;  Multicast Interfaces all&lt;br /&gt;  Filelist             None&lt;br /&gt;  Filterlist           None&lt;br /&gt;  MOTD                 None&lt;br /&gt;  Upload Directory     None&lt;br /&gt;  Paths                None&lt;br /&gt;  Static Peers         None&lt;br /&gt;&amp;nbsp;&lt;br /&gt;Press ctrl+C to exit.&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:54:54 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcing presence by multicast &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;group: 224.3.45.67&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:54:54 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcement sent via all interfaces&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Assuming the server is running with the IP &lt;code&gt;192.168.56.6&lt;/code&gt;, you can manually
+start Pacserve on the Slave(s) hosts as:&lt;/p&gt;
+&lt;p&gt;Input:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;pacserve --multicast --peer &lt;span class=&#34;s2&#34;&gt;&amp;quot;http://192.168.56.6:15678&amp;quot;&lt;/span&gt;&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+Output:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;PacserveServer&lt;br /&gt;  PID                  1102&lt;br /&gt;  Addresses&lt;br /&gt;    lo:     127.0.0.1&lt;br /&gt;    eth0:   10.0.2.15&lt;br /&gt;    enp0s9: 192.168.56.7&lt;br /&gt;  Port                 15678&lt;br /&gt;  Multicast Address    all interfaces&lt;br /&gt;  Multicast Port       15679&lt;br /&gt;  Multicast Group      224.3.45.67&lt;br /&gt;  Multicast Interval   5m&lt;br /&gt;  Multicast Interfaces all&lt;br /&gt;  Filelist             None&lt;br /&gt;  Filterlist           None&lt;br /&gt;  MOTD                 None&lt;br /&gt;  Upload Directory     None&lt;br /&gt;  Paths                None&lt;br /&gt;  Static Peers         http://192.168.56.6:15678&lt;br /&gt;&amp;nbsp;&lt;br /&gt;Press ctrl+C to exit.&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:00 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcing presence via POST to http://192.168.56.6:15678&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:00 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: POSTing to http://192.168.56.6:15678/ &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;type&lt;/span&gt;: nudge&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:01 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcing presence by multicast &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;group: 224.3.45.67&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:01 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: announcement sent via all interfaces&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+After starting the Slave host you should get the following message on the Master console:
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:00 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: added http://192.168.56.7:15678/ &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;POST&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;br /&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;2015-10-23 05:56:00 AEDT&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; INFO: 192.168.56.7 &lt;span class=&#34;s2&#34;&gt;&amp;quot;POST / HTTP/1.1&amp;quot;&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;200&lt;/span&gt; -&lt;br /&gt;&lt;/pre&gt;&lt;/div&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;!--  vim: set spell: --&gt;
+
+&lt;!--  vim: set spelllang=en: --&gt;
+
+&lt;!--  vim: set filetype=htmldjango: --&gt;      
+          </content>
+  </entry>
+  
+
+
+</feed>

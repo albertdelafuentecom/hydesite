@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="http://www.albertdelafuente.com">
+  <title>
+    albert:/dev/blog  </title>
+    <link href="http://www.albertdelafuente.com/es/tags/Hyde.xml" rel="self" />
+  
+    <link href="http://www.albertdelafuente.com/blog/"/>
+  
+    
+  <updated>2015-12-25T01:16:59Z</updated>
+
+  <id>http://www.albertdelafuente.com/es/tags/Hyde.xml</id>
+
+    
+
+</feed>

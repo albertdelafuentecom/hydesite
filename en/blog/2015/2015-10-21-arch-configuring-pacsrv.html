@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>
+        Configuring Pacserve and Powerpill on Arch Linux
+        | Albert De La Fuente
+    </title>
+    <!-- >    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+     -->
+        <link href="/media/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/media/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/media/css/animate.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+    <link href="/media/css/style-custom.css" rel="stylesheet">
+    <link href="/media/css/pygments.css" rel="stylesheet">
+    <link href="/media/css/flag-icon.min.css" rel="stylesheet">
+        
+        <link href="/es/blog/2015/arch-configuring-pacsrv.html" rel="prev">
+            <link href="/pt/blog/2015/resizing-lvm-on-luks.html" rel="next">
+    
+        <link rel="alternate" type="application/rss+xml"
+          href="/blog/index.xml" title="albert:/dev/blog">
+    
+            <meta property="og:title" content="Configuring Pacserve and Powerpill on Arch Linux">
+    <meta property="og:description" content="On this post I will show how to configure and use Pacserve and Powerpill on Arch Linux. On a network of several Arch Linux boxes, it is possible to configure a Master server which will hold a copy …">
+    <meta property="og:image" content="http://www.albertdelafuente.com/media/images/blog/2015/Pacserve_Network_Topology_Example.svg">
+
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@vonpupp"/>
+    <meta name="twitter:image:src" content='http://www.albertdelafuente.com/media/images/blog/2015/Pacserve_Network_Topology_Example.svg'/>
+    <meta name="twitter:title" content="Configuring Pacserve and Powerpill on Arch Linux"/>
+    <meta name="twitter:domain" content="albertdelafuente.com"/>
+    <meta name="twitter:description" content="On this post I will show how to configure and use Pacserve and Powerpill on Arch Linux. On a network of several Arch Linux boxes, it is possible to configure a Master server which will hold a copy …"/>
+                <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-27656036-2', 'auto', {'allowLinker': true});
+      ga('send', 'pageview');
+    </script>
+          </head>
+  <body class="archive">
+        <!-- HEADER -->
+    
+    <header class="header header-dark no-sticky">
+      <nav class="navbar container">
+	<div class="navbar-header">
+          <button class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button">
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="/">
+            <img src="/media/images/avatar.jpg"
+                 class="img-circle img-thumbnail"
+                 alt="Albert De La Fuente">
+            Albert De La Fuente
+          </a>
+        </div>
+	<div id="navbar" class="navbar-collapse collapse">
+	  <ul class="nav navbar-nav pull-right">
+                                                                        <li>
+              <a href="/en/about">
+                                <span class="glyphicon glyphicon-user"></span>
+                                About
+              </a>
+            </li>
+                                    <li class="active">
+              <a href="/en/blog">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                Blog
+              </a>
+            </li>
+                                    <li>
+              <a href="/en/tags">
+                                
+              </a>
+            </li>
+            <!--    <li>
+    <div id="lf-menubar">
+      <form id="lf-search" action="//www.google.com/search">
+        <i id="lf-search-glass"><input type="submit" class="lf-sprite-search" value=""></i>
+        <input type="hidden" name="hl" value="en">
+	    <input type="hidden" name="q"  value="site:albertdelafuente.com/en/*">
+	    <input id="lf-search-query" type="text" name="q" value="">
+      </form>
+    </div>
+    </li> -->
+          </ul>
+	</div>
+
+  
+      </nav>
+    </header>
+
+<!--  vim: set filetype=htmldjango: -->    <!-- /.header -->
+
+    <!-- WRAPPER -->
+    <div class="wrapper">
+
+                  <div class="headcontent headcontent-md bg-sl-center overlay"
+           style="background-image: url('/media/images/blog/2015/Pacserve_Network_Topology_Example.svg');">
+	<div class="container inforow">
+	  <div class="col-sm-10">
+	    <h1 class="white">
+                  Configuring Pacserve and Powerpill on Arch Linux
+                  </h1>
+	  </div>
+	  <div class="col-sm-2 text-right">
+	    <ol class="breadcrumb breadcrumb-arrow">
+                                                                                                  <li>
+                <a href="/en/blog">
+                                    Blog
+                </a>
+              </li>
+                                                        <li class="active">
+                <a href="/en/blog/2015">
+                                    2015
+                </a>
+              </li>
+                            	    </ol>
+          </div>
+        </div>
+      </div>
+
+        <div class="container post">
+    <header class="entry-header">
+      <div class="meta">
+        <small><i class="fa fa-calendar"></i>Wednesday 21 October 2015</small>
+        <small>
+          <i class="fa fa-folder"></i>
+                                            <a href="/en/tags/Arch.html">
+            Arch</a>
+            ,                                  <a href="/en/tags/Python.html">
+            Python</a>
+                              </small>
+                <a href="http://www.albertdelafuente.com/en/blog/2015/2015-10-21-arch-configuring-pacsrv.html#disqus_thread">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+                <span>
+          <i class="fa fa-user-plus"></i> 
+        </span>
+                <div class="addthis_horizontal_follow_toolbox"
+             style="margin-top: -25px;
+             margin-left: -25px;">
+        </div>
+              </div>
+    </header>
+    <div class="entry-content padding-bottom">
+            <h2>Intro</h2>
+<p>On this post I will show how to configure and use <code>Pacserve</code> and <code>Powerpill</code> on
+Arch Linux. On a network of several Arch Linux boxes, it is possible to
+configure a <code>Master</code> server which will hold a copy of all the installed packages
+within that host and keep it up to date frequently.  The other hosts on the
+network can be configured as <code>Slaves</code> and they will download the packages from
+the Master whenever possible instead of the Internet directly. The objective is
+to save bandwidth and time when using the package manager.</p>
+<p>The documentation of <a href="http://xyne.archlinux.ca/projects/pacserve/">Pacserve</a> explains how it works. This image summarizes
+well the behavior.</p>
+<p><img src="/media/images/blog/2015/Pacserve_Network_Topology_Example.svg"></p>
+<p>Pacserve by itself seems very interesting however I could not make it work
+properly. I think it has something to do my router UDP multicast forwarding
+support (see <a href="http://wiki.openwrt.org/doc/recipes/dumbap">openwrt-multicast</a>). Nevertheless, I could use it within
+<a href="http://xyne.archlinux.ca/projects/powerpill/">Powerpill</a> which is a pacman wrapper to allow parallel and segmented downloads
+through <a href="http://aria2.sourceforge.net/">Aria2</a> and <a href="http://xyne.archlinux.ca/projects/reflector/">Reflector</a>.  This combo sounds even better, so I will focus on
+how to install and use the tree tools together.</p>
+<h2>Installation</h2>
+<div class="highlight"><pre><span class="c"># Just in case the testdb does not exists</span><br />gpg --list-key<br />&nbsp;<br /><span class="c"># Receive xyne gpg key</span><br />gpg --recv-keys 1D1F0DC78F173680<br />&nbsp;<br /><span class="c"># Install the packages</span><br />yaourt -Sy --noconfirm reflector pacserve powerpill<br /></pre></div>
+
+<p><br /></p>
+<h2>Starting the services (both the Master and Slave(s) host(s))</h2>
+<p>After everything is installed:</p>
+<div class="highlight"><pre><span class="c"># Enable opening the ports</span><br />sudo systemctl <span class="nb">enable </span>pacserve-ports.service<br />&nbsp;<br /><span class="c"># Enable pacserve</span><br />sudo systemctl <span class="nb">enable </span>pacserve.service<br />&nbsp;<br /><span class="c"># Start pacserve</span><br />sudo systemctl start pacserve.service<br /></pre></div>
+
+<p><br />
+For troubleshooting purposes the services can be started manually. See the
+Troubleshooting section if you have problems.</p>
+<h2>Configuring Powerpill to use the Master server (Slave(s) hosts only)</h2>
+<p>Edit the file <code>/etc/powerpill/powerpill.json</code> to include the <code>pacserve</code>.<code>serve</code>
+attribute:</p>
+<div class="highlight"><pre><span class="p">{</span><br />  <span class="nt">&quot;aria2&quot;</span><span class="p">:</span> <span class="p">{</span><br />    <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><br />      <span class="s2">&quot;--allow-overwrite=true&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--always-resume=false&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--auto-file-renaming=false&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--check-integrity=true&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--conditional-get=true&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--continue=true&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--file-allocation=none&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--log-level=error&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--max-concurrent-downloads=100&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--max-connection-per-server=5&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--min-split-size=5M&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--remote-time=true&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--show-console-readout=true&quot;</span><br />    <span class="p">],</span><br />    <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/usr/bin/aria2c&quot;</span><br />  <span class="p">},</span><br />  <span class="nt">&quot;pacman&quot;</span><span class="p">:</span> <span class="p">{</span><br />    <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/pacman.conf&quot;</span><span class="p">,</span><br />    <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/usr/bin/pacman&quot;</span><br />  <span class="p">},</span><br />  <span class="nt">&quot;pacserve&quot;</span><span class="p">:</span> <span class="p">{</span><br />    <span class="nt">&quot;server&quot;</span><span class="p">:</span> <span class="s2">&quot;http://192.168.56.6:15678&quot;</span><br />  <span class="p">},</span><br />  <span class="nt">&quot;powerpill&quot;</span><span class="p">:</span> <span class="p">{</span><br />    <span class="nt">&quot;ask&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span><br />    <span class="nt">&quot;reflect databases&quot;</span><span class="p">:</span> <span class="kc">false</span><br />  <span class="p">},</span><br />  <span class="nt">&quot;reflector&quot;</span><span class="p">:</span> <span class="p">{</span><br />    <span class="nt">&quot;args.unused&quot;</span><span class="p">:</span> <span class="p">[</span><br />      <span class="s2">&quot;--protocol&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;http&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--latest&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;50&quot;</span><br />    <span class="p">]</span><br />  <span class="p">},</span><br />  <span class="nt">&quot;rsync&quot;</span><span class="p">:</span> <span class="p">{</span><br />    <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><br />      <span class="s2">&quot;--no-motd&quot;</span><span class="p">,</span><br />      <span class="s2">&quot;--progress&quot;</span><br />    <span class="p">],</span><br />    <span class="nt">&quot;db only&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span><br />    <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/usr/bin/rsync&quot;</span><span class="p">,</span><br />    <span class="nt">&quot;servers&quot;</span><span class="p">:</span> <span class="p">[]</span><br />  <span class="p">}</span><br /><span class="p">}</span><br /></pre></div>
+
+<p><br />
+In this example I configured two VMs using Vagrant with an internal network.
+The server runs on <code>192.168.56.6</code> on port <code>15678</code> (default port).</p>
+<p>After this we can use Powerpill as a replacement of Pacman as follows</p>
+<div class="highlight"><pre><span class="c"># System upgrade</span><br />sudo powerpill -Syu<br />&nbsp;<br /><span class="c"># Install a package</span><br />sudo powerpill -S wget<br /></pre></div>
+
+<p><br /></p>
+<h2>Conclusions</h2>
+<p>When <a href="http://xyne.archlinux.ca/projects/powerpill/">powerpill</a> is used..</p>
+<h2>TODOs</h2>
+<ul>
+<li>Check how to have only <strong>one</strong> Master DB and all the Slaves also sync the DB
+from the master</li>
+<li>Use reflector commands within Powerpill</li>
+<li>What happens if different architectures are on the same network and UDP
+multicast works?</li>
+</ul>
+<h2>Troubleshooting Pacserve (without Powerpill)</h2>
+<p>As I said before I could not make it working using multicast, so I had to
+manually start the Pacserve Master host as:</p>
+<p>Input:</p>
+<div class="highlight"><pre>pacserve --multicast<br /></pre></div>
+
+<p><br />
+Output:</p>
+<div class="highlight"><pre>PacserveServer<br />  PID                  1048<br />  Addresses<br />    lo:     127.0.0.1<br />    eth0:   10.0.2.15<br />    enp0s9: 192.168.56.6<br />  Port                 15678<br />  Multicast Address    all interfaces<br />  Multicast Port       15679<br />  Multicast Group      224.3.45.67<br />  Multicast Interval   5m<br />  Multicast Interfaces all<br />  Filelist             None<br />  Filterlist           None<br />  MOTD                 None<br />  Upload Directory     None<br />  Paths                None<br />  Static Peers         None<br />&nbsp;<br />Press ctrl+C to exit.<br /><span class="o">[</span>2015-10-23 05:54:54 AEDT<span class="o">]</span> INFO: announcing presence by multicast <span class="o">(</span>group: 224.3.45.67<span class="o">)</span><br /><span class="o">[</span>2015-10-23 05:54:54 AEDT<span class="o">]</span> INFO: announcement sent via all interfaces<br /></pre></div>
+
+<p><br />
+Assuming the server is running with the IP <code>192.168.56.6</code>, you can manually
+start Pacserve on the Slave(s) hosts as:</p>
+<p>Input:</p>
+<div class="highlight"><pre>pacserve --multicast --peer <span class="s2">&quot;http://192.168.56.6:15678&quot;</span><br /></pre></div>
+
+<p><br />
+Output:</p>
+<div class="highlight"><pre>PacserveServer<br />  PID                  1102<br />  Addresses<br />    lo:     127.0.0.1<br />    eth0:   10.0.2.15<br />    enp0s9: 192.168.56.7<br />  Port                 15678<br />  Multicast Address    all interfaces<br />  Multicast Port       15679<br />  Multicast Group      224.3.45.67<br />  Multicast Interval   5m<br />  Multicast Interfaces all<br />  Filelist             None<br />  Filterlist           None<br />  MOTD                 None<br />  Upload Directory     None<br />  Paths                None<br />  Static Peers         http://192.168.56.6:15678<br />&nbsp;<br />Press ctrl+C to exit.<br /><span class="o">[</span>2015-10-23 05:56:00 AEDT<span class="o">]</span> INFO: announcing presence via POST to http://192.168.56.6:15678<br /><span class="o">[</span>2015-10-23 05:56:00 AEDT<span class="o">]</span> INFO: POSTing to http://192.168.56.6:15678/ <span class="o">[</span><span class="nb">type</span>: nudge<span class="o">]</span><br /><span class="o">[</span>2015-10-23 05:56:01 AEDT<span class="o">]</span> INFO: announcing presence by multicast <span class="o">(</span>group: 224.3.45.67<span class="o">)</span><br /><span class="o">[</span>2015-10-23 05:56:01 AEDT<span class="o">]</span> INFO: announcement sent via all interfaces<br /></pre></div>
+
+<p><br />
+After starting the Slave host you should get the following message on the Master console:
+<div class="highlight"><pre><span class="o">[</span>2015-10-23 05:56:00 AEDT<span class="o">]</span> INFO: added http://192.168.56.7:15678/ <span class="o">(</span>POST<span class="o">)</span><br /><span class="o">[</span>2015-10-23 05:56:00 AEDT<span class="o">]</span> INFO: 192.168.56.7 <span class="s2">&quot;POST / HTTP/1.1&quot;</span> <span class="m">200</span> -<br /></pre></div><br /></p>
+<!--  vim: set spell: -->
+
+<!--  vim: set spelllang=en: -->
+
+<!--  vim: set filetype=htmldjango: -->          </div>
+
+          <div id="thgtp-form" class="row well text-center">
+        <div class="col-sm-8">
+          <h3>
+            <a href="/services/development">
+              Check out <strong>the Services</strong> section!
+            </a>
+          </h3>
+          <p>
+            If you need development services... Interested?<br><br>
+            <br>
+            <br>
+            <a role="button" class="btn btn-default"
+               href="/services/development">Contact</a>
+          </p>
+        </div>
+        <div class="col-sm-4 text-center">
+          <a href="/services/development">
+            <img src="/media/images/services/development.jpg"
+                 alt="Development Services">
+          </a>
+        </div>
+      </div>
+
+      <div class="padding"></div>
+      </div>
+
+  <div id="subscribe" class="newsletter bg-sl-center overlay overlay-light"
+       style="background-image: url('/media/images/services/photo-notepad.jpg');">
+    <div class="container inforow middle">
+      <div class="col-sm-6">
+	<p>Get notified of my next blog post</p>
+      </div>
+      <div class="col-sm-6">
+	<div id="feedback-form">
+	  <form action="//albertdelafuente.us12.list-manage.com/subscribe/post?u=2078b40de4d18256fef954d6e&amp;id=bdd2d44f54" method="post">
+	    <input name="EMAIL" placeholder="Enter your email address" required type="email">
+	    <button type="submit" class="btn btn-default">Subscribe</button>
+	  </form>
+	  <div class="success-block"></div>
+	</div>
+      </div>
+    </div>
+  </div>
+
+    <div class="container" id="disqus_thread"></div>
+
+  <script type="text/javascript">
+    var disqus_shortname = 'vonpupp';
+
+    (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by
+      Disqus.</a></noscript>
+  
+    <div class="addthis_recommended_horizontal"></div>
+  
+          </div>
+    <!-- /.wrapper -->
+
+    <!-- FOOTER -->
+    <footer class="footer footer-dark">
+      <div class="container">
+
+	<hr />
+
+	<div class="row">
+	  <div class="col-sm-8">
+	    <p class="copyright">
+              This work is licensed under a
+              <a rel="license"
+                 href="//creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative
+                Commons Attribution-ShareAlike 3.0 Unported License</a>.
+            </p>
+	  </div>
+	  <div class="col-sm-4 text-right">
+	    <nav>
+	      Follow Me
+          <div class="addthis_horizontal_follow_toolbox"
+               style="float: right;">
+          </div>
+	    </nav>
+	  </div>
+	</div>
+      </div>
+    </footer>
+    <!-- /.footer -->
+
+    <!-- ScrollTop -->
+    <a href="#" class="scrolltop"><i></i></a>
+
+    
+          <!-- SCRIPTS -->
+    <script src="/media/js/jquery-2.1.3.min.js"></script>
+    <script src="/media/js/bootstrap.min.js"></script>
+    <script src="/media/js/plugins.js"></script>
+    <script src="/media/js/custom.js"></script>
+    <script src="/media/js/bootstrap-tab-bookmark.js"></script>
+
+    
+    
+
+    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+  <script type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5626d7f3b1c34ff8"
+    async="async">
+  </script>
+  
+    <script type="text/javascript">
+    var disqus_shortname = 'vonpupp';
+
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+  </script>
+  
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  
+  </body>
+</html>
